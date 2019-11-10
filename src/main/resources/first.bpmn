@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1k1rxov" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.4.1">
+  <bpmn:process id="checkChunks" name="checkChunks" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_0s64vin</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0s64vin" sourceRef="StartEvent_1" targetRef="checkChunksComplete" />
+    <bpmn:serviceTask id="checkChunksComplete" name="CheckChunksComplete" camunda:type="external" camunda:topic="checkChunksCompleteTopic">
+      <bpmn:incoming>SequenceFlow_0s64vin</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_12bkfsw</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1xlbhh0">
+      <bpmn:incoming>SequenceFlow_12bkfsw</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0u3pwfn</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0f9u7le</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_12bkfsw" sourceRef="checkChunksComplete" targetRef="ExclusiveGateway_1xlbhh0" />
+    <bpmn:endEvent id="EndEvent_1q0xcyl" name="End">
+      <bpmn:incoming>SequenceFlow_0u3pwfn</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0u3pwfn" name="No" sourceRef="ExclusiveGateway_1xlbhh0" targetRef="EndEvent_1q0xcyl">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{areChunksComplete == "NO"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0f9u7le" name="Yes" sourceRef="ExclusiveGateway_1xlbhh0" targetRef="startNexProcess">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{areChunksComplete == "YES"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:callActivity id="startNexProcess" name="Start Next Process" calledElement="nextDetailedProcess">
+      <bpmn:incoming>SequenceFlow_0f9u7le</bpmn:incoming>
+    </bpmn:callActivity>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="checkChunks">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0s64vin_di" bpmnElement="SequenceFlow_0s64vin">
+        <di:waypoint x="188" y="120" />
+        <di:waypoint x="240" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0lomhc9_di" bpmnElement="checkChunksComplete">
+        <dc:Bounds x="240" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_1xlbhh0_di" bpmnElement="ExclusiveGateway_1xlbhh0" isMarkerVisible="true">
+        <dc:Bounds x="395" y="95" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_12bkfsw_di" bpmnElement="SequenceFlow_12bkfsw">
+        <di:waypoint x="340" y="120" />
+        <di:waypoint x="395" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_1q0xcyl_di" bpmnElement="EndEvent_1q0xcyl">
+        <dc:Bounds x="502" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="510" y="145" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0u3pwfn_di" bpmnElement="SequenceFlow_0u3pwfn">
+        <di:waypoint x="445" y="120" />
+        <di:waypoint x="502" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="466" y="102" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0f9u7le_di" bpmnElement="SequenceFlow_0f9u7le">
+        <di:waypoint x="420" y="145" />
+        <di:waypoint x="420" y="230" />
+        <di:waypoint x="510" y="230" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="426" y="185" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="CallActivity_0wmtzl1_di" bpmnElement="startNexProcess">
+        <dc:Bounds x="510" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
